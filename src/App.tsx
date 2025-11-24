@@ -16,7 +16,7 @@ const AppContent = () => {
   const [showResults, setShowResults] = useState(false);
   const [quality, setQuality] = useState(5);
   const [speed, setSpeed] = useState(1.0);
-  const [voice, setVoice] = useState("Female");
+  const [voice, setVoice] = useState("Female1");
 
   const { pipelineReady, tts, speakerEmbeddings, downloadProgress } = useTTS();
 

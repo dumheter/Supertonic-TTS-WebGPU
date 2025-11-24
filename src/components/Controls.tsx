@@ -36,7 +36,7 @@ export const Controls = ({
       <div className="flex items-center gap-6">
         <span className="font-semibold text-gray-900">Voice:</span>
         <div className="flex gap-4 text-sm">
-          {["Female", "Male"].map((v) => (
+          {["Female1", "Female2", "Male1", "Male2"].map((v) => (
             <button
               key={v}
               onClick={() => setVoice(v)}

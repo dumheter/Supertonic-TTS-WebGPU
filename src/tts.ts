@@ -3,7 +3,7 @@ import { split } from "./splitter";
 import type { RawAudio } from "@huggingface/transformers";
 
 const MODEL_ID = "onnx-community/Supertonic-TTS-ONNX";
-const VOICES_URL = `https://huggingface.co/${MODEL_ID}/resolve/main/voices/`;
+const VOICES_URL = "/voices/";
 
 let pipelinePromise: Promise<TextToAudioPipeline> | null = null;
 let embeddingsPromise: Promise<Record<string, Float32Array>> | null = null;
@@ -29,13 +29,17 @@ export async function loadPipeline(progressCallback: (info: any) => void) {
 
 export async function loadEmbeddings() {
   return (embeddingsPromise ??= (async () => {
-    const [female, male] = await Promise.all([
+    const [female1, female2, male1, male2] = await Promise.all([
       fetch(`${VOICES_URL}F1.bin`).then((r) => r.arrayBuffer()),
+	  fetch(`${VOICES_URL}F2.bin`).then((r) => r.arrayBuffer()),
       fetch(`${VOICES_URL}M1.bin`).then((r) => r.arrayBuffer()),
+	  fetch(`${VOICES_URL}M2.bin`).then((r) => r.arrayBuffer()),
     ]);
     return {
-      Female: new Float32Array(female),
-      Male: new Float32Array(male),
+      Female1: new Float32Array(female1),
+	  Female2: new Float32Array(female2),
+      Male1: new Float32Array(male1),
+	  Male2: new Float32Array(male2),
     };
   })());
 }
