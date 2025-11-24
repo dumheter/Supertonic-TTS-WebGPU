@@ -8,11 +8,21 @@ let pipelinePromise: Promise<TextToAudioPipeline> | null = null;
 let embeddingsPromise: Promise<Record<string, Float32Array>> | null = null;
 
 export async function loadPipeline(progressCallback: (info: any) => void) {
-  // @ts-ignore
-  return (pipelinePromise ??= pipeline("text-to-speech", MODEL_ID, {
-    device: "webgpu",
-    progress_callback: progressCallback,
-  }) as Promise<TextToAudioPipeline>);
+  return pipelinePromise ??= (async () => {
+    const tts = (await pipeline("text-to-speech", MODEL_ID, {
+      device: "webgpu",
+      progress_callback: progressCallback,
+    })) as TextToAudioPipeline;
+
+    // Warm up the model to compile shaders
+    await tts("Hello", {
+      speaker_embeddings: new Float32Array(1 * 101 * 128), // Dummy embedding
+      num_inference_steps: 1,
+      speed: 1.0,
+    });
+
+    return tts;
+  })();
 }
 
 export async function loadEmbeddings() {
