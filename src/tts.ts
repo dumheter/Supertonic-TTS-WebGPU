@@ -9,6 +9,7 @@ let embeddingsPromise: Promise<Record<string, Float32Array>> | null = null;
 
 export async function loadPipeline(progressCallback: (info: any) => void) {
   return pipelinePromise ??= (async () => {
+    // @ts-ignore
     const tts = (await pipeline("text-to-speech", MODEL_ID, {
       device: "webgpu",
       progress_callback: progressCallback,
